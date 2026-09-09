@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天使エルSDＡＲ</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; 
+            font-family: sans-serif; 
+            user-select: none;
+        }
+        model-viewer { 
+            width: 100vw; 
+            height: 100vh; 
+            background-color: #f0f0f0; 
+        }
+
+        #ar-button {
+            position: absolute; 
+            top: 20px;          
+            left: 20px;         
+            padding: 14px 28px; 
+            background-color: #fff; 
+            border-radius: 25px;
+            border: 2px solid #ccc; 
+            font-weight: bold; 
+            font-size: 16px;
+            z-index: 999;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        #model-select-container {
+            position: absolute;
+            bottom: 30px;
+            left: 20px;
+            z-index: 999;
+        }
+
+        #model-select {
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: bold;
+            border: 2px solid #ccc;
+            border-radius: 20px;
+            background-color: #fff;
+            color: #333;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+
+<model-viewer
+    id="character-viewer"
+    src="./konomi_01.glb"
+    ios-src="./konomi_01.usdz" 
+    alt="SD天使エル"
+    ar
+    ar-modes="scene-viewer quick-look" 
+    camera-controls
+    autoplay
+    tone-mapping="none"
+    exposure="1.5"
+    shadow-intensity="1"
+    field-of-view="40deg"
+    max-camera-orbit="auto auto 200%"
+>
+    <button slot="ar-button" id="ar-button">AR撮影</button>
+</model-viewer>
+
+<div id="model-select-container">
+    <select id="model-select">
+        <option value="0">立ち</option>
+        <option value="1">ババン</option>
+        <option value="2">抱っこ</option>
+        <option value="3">お座り</option>
+        <option value="4">すやすや</option>
+        <option value="5">ダンス</option>
+    </select>
+</div>
+
+<script>
+    const viewer = document.querySelector('#character-viewer');
+    const modelSelect = document.querySelector('#model-select');
+    let currentSelectedIndex = 0;
+    let isPreloaded = false;
+
+    const modelData = [
+        { name: "立ち", glb: "./eru_01.glb", usdz: "./eru_01.usdz" },
+        { name: "ババン", glb: "./eru_02.glb", usdz: "./eru_02.usdz" },
+        { name: "抱っこ", glb: "./eru_03.glb", usdz: "./eru_03.usdz" },
+        { name: "お座り", glb: "./eru_04.glb", usdz: "./eru_04.usdz" },
+        { name: "すやすや", glb: "./eru_05.glb", usdz: "./eru_05.usdz" },
+        { name: "ダンス", glb: "./eru_06.glb", usdz: "./eru_06.usdz" }
+    ];
+
+    function changeModel(index) {
+        currentSelectedIndex = index; 
+        const model = modelData[index];
+        viewer.src = model.glb;
+        viewer.iosSrc = model.usdz;
+        
+        //モデルを切り替えたら、カメラの位置と注視点を更新
+        adjustCamera();
+    }
+
+    //カメラの注視点と位置を調整
+    function adjustCamera() {
+        if (currentSelectedIndex === 2) {
+            //注視点を低くする
+            viewer.cameraTarget = "0m 0.2m 0m";
+            //カメラ自体の位置を低くする
+            viewer.cameraOrbit = "0deg 85deg 140%";
+        } else if (currentSelectedIndex === 3) {
+            //注視点を低くする
+            viewer.cameraTarget = "0m 0.15m 0m";
+            //カメラ自体の位置を低くする
+            viewer.cameraOrbit = "0deg 85deg 135%";
+        } else if (currentSelectedIndex === 5) {
+            //注視点を低くする
+            viewer.cameraTarget = "0m 0.15m 0m";
+            //カメラ自体の位置を低くする
+            viewer.cameraOrbit = "0deg 85deg 170%";
+        } else {
+            //それ以外の時は、モデルのサイズに合わせてすべて自動計算
+            viewer.cameraTarget = "0m 0.25m 0m";
+            viewer.cameraOrbit = "0deg 85deg 150%";
+        }
+    }
+
+    viewer.addEventListener('load', () => {
+        //アニメーションの再生
+        const available = viewer.availableAnimations;
+        if (available.length > 0) {
+            viewer.animationName = available[0];
+            viewer.play();
+        }
+
+        //最初の立ちポーズが完全に表示されてから、2秒後に他のデータをダウンロード
+        if (!isPreloaded) {
+            isPreloaded = true;
+            setTimeout(() => {
+                modelData.forEach((model, index) => {
+                    if (index > 0) {
+                        fetch(model.glb).catch(() => {});
+                    }
+                });
+            }, 2000);
+        }
+    });
+
+    modelSelect.addEventListener('change', (event) => {
+        const index = parseInt(event.target.value, 10);
+        changeModel(index);
+    });
+
+    //ページ読み込み時に初期状態のカメラ設定を確実に反映
+    adjustCamera();
+</script>
+
+</body>
+</html>
