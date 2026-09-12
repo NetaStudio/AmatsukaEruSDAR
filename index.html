@@ -74,10 +74,10 @@
             transform: translate(-50%, -50%);
             width: 90%;
             max-width: 400px;
-            background: transparent; /* 枠の背景を透明化 */
-            padding: 0; /* 余白をカット */
-            box-shadow: none; /* 影を削除 */
-            border: none; /* 枠線を削除 */
+            background: transparent;
+            padding: 0;
+            box-shadow: none;
+            border: none;
             text-align: center;
             box-sizing: border-box;
         }
@@ -191,18 +191,15 @@
     }
 
     function adjustCamera() {
-        if (currentSelectedIndex === 2) {
-            viewer.cameraTarget = "0m 0.2m 0m";
-            viewer.cameraOrbit = "0deg 85deg 140%";
-        } else if (currentSelectedIndex === 3) {
+        if (currentSelectedIndex === 3) {
             viewer.cameraTarget = "0m 0.15m 0m";
             viewer.cameraOrbit = "0deg 85deg 135%";
         } else if (currentSelectedIndex === 5) {
-            viewer.cameraTarget = "0m 0.15m 0m";
-            viewer.cameraOrbit = "0deg 85deg 170%";
+            viewer.cameraTarget = "0m 0.05m 0m";
+            viewer.cameraOrbit = "0deg 85deg 160%";
         } else {
-            viewer.cameraTarget = "0m 0.25m 0m";
-            viewer.cameraOrbit = "0deg 85deg 150%";
+            viewer.cameraTarget = "0m 0.15m 0m";
+            viewer.cameraOrbit = "0deg 85deg 140%";
         }
     }
 
