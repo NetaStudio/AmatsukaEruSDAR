@@ -72,35 +72,35 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 85%;
-            max-width: 360px;
-            background: #15202b;
-            padding: 28px 20px;
+            width: 90%;
+            max-width: 400px;
+            background: #222;
+            padding: 24px;
             border-radius: 16px;
-            border: 1px solid #38444d;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
             text-align: center;
             box-sizing: border-box;
         }
 
         .modal-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             margin-bottom: 12px;
-            color: #fff;
+            color: #ffcc00; /* 黄色文字 */
         }
 
         .modal-desc {
             font-size: 14px;
             line-height: 1.6;
             margin-bottom: 20px;
-            color: #8899a6;
+            color: #ddd;
         }
 
         .modal-instruction {
             font-size: 15px;
             font-weight: bold;
-            color: #1d9bf0;
-            line-height: 1.5;
+            color: #1da1f2; /* 青文字 */
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -109,12 +109,13 @@
 <!-- Xアプリ検知時のオーバーレイ案内 -->
 <div id="inapp-modal">
     <div class="modal-content">
-        <div class="modal-title">ブラウザで開いてください</div>
+        <div class="modal-title">⚠️ ブラウザで開いてください</div>
         <div class="modal-desc">
             Xアプリ内ではAR機能が制限されています
         </div>
         <div class="modal-instruction">
-            ︙ から「ブラウザで開く」を選択してください
+            画面下部の︙から<br>
+            「ブラウザで開く」を選択してください
         </div>
     </div>
 </div>
