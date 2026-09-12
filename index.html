@@ -65,9 +65,6 @@
             background-color: rgba(0, 0, 0, 0.85);
             color: #fff;
             z-index: 10000;
-            box-sizing: border-box;
-            padding: 30px 20px;
-            text-align: center;
         }
 
         .modal-content {
@@ -75,54 +72,50 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 400px;
-            background: #222;
-            padding: 24px;
+            width: 85%;
+            max-width: 360px;
+            background: #15202b;
+            padding: 28px 20px;
             border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            border: 1px solid #38444d;
+            text-align: center;
+            box-sizing: border-box;
         }
 
         .modal-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             margin-bottom: 12px;
-            color: #ffcc00;
+            color: #fff;
         }
 
         .modal-desc {
             font-size: 14px;
             line-height: 1.6;
             margin-bottom: 20px;
-            color: #ddd;
+            color: #8899a6;
         }
 
-        .browser-btn {
-            display: inline-block;
-            width: 100%;
-            padding: 14px 0;
-            background-color: #1da1f2;
-            color: #fff;
+        .modal-instruction {
+            font-size: 15px;
             font-weight: bold;
-            text-decoration: none;
-            border-radius: 25px;
-            font-size: 16px;
-            box-sizing: border-box;
+            color: #1d9bf0;
+            line-height: 1.5;
         }
     </style>
 </head>
 <body>
 
-<!-- インアプリブラウザ検知時のオーバーレイ案内 -->
+<!-- Xアプリ検知時のオーバーレイ案内 -->
 <div id="inapp-modal">
     <div class="modal-content">
-        <div class="modal-title">⚠️ Safari / Chromeで開いてください</div>
+        <div class="modal-title">ブラウザで開いてください</div>
         <div class="modal-desc">
-            X（Twitter）アプリ内ではAR機能が制限されています。<br><br>
-            右上の<b>「...」</b>または<b>共有アイコン</b>をタップし、<br>
-            <b>「ブラウザで開く」</b>を選択してください。
+            Xアプリ内ではAR機能が制限されています
         </div>
-        <a id="open-browser-link" href="#" class="browser-btn">ブラウザで開く</a>
+        <div class="modal-instruction">
+            ︙ から「ブラウザで開く」を選択してください
+        </div>
     </div>
 </div>
 
@@ -156,35 +149,23 @@
 </div>
 
 <script>
-    // --- X（Twitter）アプリ等のインアプリブラウザ判定および誘導処理 ---
+    // --- X（Twitter）アプリ等のインアプリブラウザ判定 ---
     (function checkInAppBrowser() {
         const ua = navigator.userAgent || navigator.vendor || window.opera;
-        // X(Twitter)アプリ、LINE、InstagramなどのWebviewキーワードを検知
+        // X(Twitter)アプリ、LINE、InstagramなどのWebviewを検知
         const isInApp = /Twitter|TwitterAndroid|FBAN|FBAV|Instagram|Line/i.test(ua);
 
         if (isInApp) {
-            const isAndroid = /Android/i.test(ua);
-            const currentUrl = window.location.href;
-
-            if (isAndroid) {
-                // Androidの場合: intentスキームを使ってChromeを強制起動を試みる
-                const cleanUrl = currentUrl.replace(/^https?:\/\//, '');
-                window.location.href = `intent://${cleanUrl}#Intent;scheme=https;package=com.android.chrome;end;`;
-            } else {
-                // iOSの場合: 自動脱出が仕様上不可のためモーダルを表示
-                document.addEventListener("DOMContentLoaded", () => {
-                    const modal = document.getElementById('inapp-modal');
-                    const link = document.getElementById('open-browser-link');
-                    if (modal && link) {
-                        link.href = currentUrl;
-                        modal.style.display = 'block';
-                    }
-                });
-            }
+            document.addEventListener("DOMContentLoaded", () => {
+                const modal = document.getElementById('inapp-modal');
+                if (modal) {
+                    modal.style.display = 'block';
+                }
+            });
         }
     })();
 
-    // --- 既存のモデル表示・変更スクリプト ---
+    // --- モデル表示・変更スクリプト ---
     const viewer = document.querySelector('#character-viewer');
     const modelSelect = document.querySelector('#model-select');
     let currentSelectedIndex = 0;
